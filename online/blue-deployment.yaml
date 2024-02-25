@@ -1,0 +1,13 @@
+$schema: https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json
+name: blue
+endpoint_name: pcb-detection-online
+model: azureml:yolov5:8
+#environment: azureml:inference:1
+environment: azureml:online-endpoint:13 
+#  conda_file: ./code/env.yaml
+#  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:latest
+code_configuration:
+  code: ./code
+  scoring_script: inference.py
+instance_type: Standard_DS4_v2
+instance_count: 1

@@ -1,0 +1,34 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License.
+
+variables:
+- template: ./config-infra-prod.yml
+
+
+trigger:
+- None
+
+pool:
+  vmImage: ubuntu-20.04
+
+
+stages:
+- stage: RunTrainingPipeline
+  displayName: Run Training Pipeline
+  
+  jobs:
+    - job: RunTrainingPipeline
+      timeoutInMinutes: 120 # how long to run the job before automatically cancelling
+      steps:
+      - checkout: self
+        path: s/
+      - template: /mlops/deploy-pipeline/aml-cli-v2/install-az-cli.yml
+      - template: /mlops/deploy-pipeline/aml-cli-v2/install-aml-cli.yml
+      - template: /mlops/deploy-pipeline/aml-cli-v2/connect-to-workspace.yml
+      - template: /mlops/deploy-pipeline/aml-cli-v2/run-pipeline.yml
+        parameters:
+          pipeline_file: mlops/train/pipeline.yaml
+          #experiment_name: $(environment)_PCB_Detection_$(Build.SourceBranchName)
+          experiment_name: e2e_training
+          display_name: $(environment)_PCB_Detection_$(Build.BuildID)
+

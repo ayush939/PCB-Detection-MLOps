@@ -1,0 +1,23 @@
+import argparse
+from pathlib import Path
+import pandas
+import json
+
+parser = argparse.ArgumentParser(description='Model validation')
+
+parser.add_argument('--datapath', type=str, default=None,
+                    help='Path to the metric file')
+
+parser.add_argument('--current_metrics', type=str, default=None,
+                    help='Path to the current metric values')
+
+
+args = parser.parse_args()
+
+
+df = pandas.read_excel(Path(args.datapath) / 'metric.xlsx')
+
+f = open(Path(args.current_metrics) / "data.json", 'r')
+data = json.load(f)
+
+

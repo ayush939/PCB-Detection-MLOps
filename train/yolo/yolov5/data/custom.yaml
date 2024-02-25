@@ -1,0 +1,6 @@
+names:
+  0: pcb
+path: ./yolov5/relabel
+test: null
+train: images/train
+val: images/test

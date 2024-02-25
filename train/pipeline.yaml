@@ -1,0 +1,44 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+type: pipeline
+
+experiment_name: e2e_training
+description: Training pipeline for PCB detection
+
+settings:
+  default_datastore: azureml:workspaceblobstore
+  default_compute: azureml:gpu-cluster
+  continue_on_step_failure: false
+
+# give the correct paths to the data input
+inputs:
+  train_data:
+    type: uri_folder 
+    path: ./../data/custom2.1
+  eval_data:
+    type: uri_folder 
+    path: ./../data/testPanels
+  
+
+jobs:
+  train_model:
+    type: command
+    component: ./train.yaml
+    inputs:
+      data: ${{parent.inputs.train_data}}
+    
+  evaluate_model:
+    type: command
+    component: ./eval.yaml
+    inputs:
+      data: ${{parent.inputs.eval_data}}
+      model: ${{parent.jobs.train_model.outputs.model}}
+
+  val_reg_model:
+    type: command
+    component: ./val.yaml
+    inputs:
+      experiment_name: e2e_training
+      current_metrics: ${{parent.jobs.evaluate_model.outputs.metric}}
+      model: ${{parent.jobs.train_model.outputs.model}}
+
+     

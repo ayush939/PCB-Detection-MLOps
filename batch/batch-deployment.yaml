@@ -1,0 +1,29 @@
+$schema: https://azuremlschemas.azureedge.net/latest/batchDeployment.schema.json
+#name: batch-dp
+description: A deployment using Torch .
+endpoint_name: PCB-detection
+#type: model
+model: azureml:yolov5@latest
+compute: azureml:gpu-cluster
+environment: azureml:yolov5@latest 
+  #name: tensorflow27-cuda11-gpu
+  #image: mcr.microsoft.com/azureml/curated/tensorflow-2.7-ubuntu20.04-py38-cuda11-gpu:latest
+  #conda_file: environment/conda.yaml
+code_configuration:
+  code: ./code
+  scoring_script: inference.py
+resources:
+  instance_count: 1
+#tags:
+#  device_acceleration: CUDA
+#  device_batching: 16
+
+max_concurrency_per_instance: 1
+mini_batch_size: 5
+#output_action: sunnary
+#output_file_name: predictions.csv
+retry_settings:
+  max_retries: 3
+  timeout: 300
+error_threshold: -1
+logging_level: info

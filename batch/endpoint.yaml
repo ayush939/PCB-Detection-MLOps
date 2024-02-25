@@ -1,0 +1,4 @@
+$schema: https://azuremlschemas.azureedge.net/latest/batchEndpoint.schema.json
+name: PCB-detection
+description: A batch endpoint for performing object classification using the PyTorch model YOLOv5 .
+auth_mode: aad_token

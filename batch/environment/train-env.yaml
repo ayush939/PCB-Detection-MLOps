@@ -1,0 +1,5 @@
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+name: yolov5 
+image: ultralytics/yolov5:latest
+conda_file: ../../train/environment/train-conda.yml
+description: Environment created from a Docker image plus Conda environment to train yolov5.

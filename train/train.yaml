@@ -1,0 +1,23 @@
+# <component>
+name: yolov5
+display_name: Train Model
+# version: 1 # Not specifying a version will automatically update the version
+type: command
+inputs:
+  data: 
+    type: uri_folder
+outputs:
+  model:
+    type: custom_model
+code: ./yolo
+environment:
+ azureml:yolov5@latest
+command: >-
+  python yolov5/train.py 
+  --img 1280 
+  --rect --epochs 1 
+  --data custom.yaml 
+  --weights yolov5s.pt 
+  --dataasset_path ${{inputs.data}}
+  --modelPath ${{outputs.model}}
+# </component>

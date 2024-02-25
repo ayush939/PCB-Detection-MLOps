@@ -1,0 +1,22 @@
+# <component>
+name: yolov5
+display_name: Validate Model
+# version: 1 # Not specifying a version will automatically update the version
+type: command
+inputs:
+  experiment_name:
+    type: string
+  current_metrics:
+    type: uri_folder
+  model: 
+    type: uri_folder
+    
+code: ./validate
+environment:
+ azureml:yolov5@latest
+command: >-
+  python val_model.py
+  --experiment_name ${{inputs.experiment_name}}
+  --current_metrics ${{inputs.current_metrics}}
+  --modelPath ${{inputs.model}}
+# </component>

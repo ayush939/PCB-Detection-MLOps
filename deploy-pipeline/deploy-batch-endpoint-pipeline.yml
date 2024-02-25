@@ -1,0 +1,39 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License.
+
+variables:
+- template: ./config-infra-prod.yml
+
+
+trigger:
+- none
+
+pool:
+  vmImage: ubuntu-20.04
+
+
+
+stages:
+- stage: CreateBatchEndpoint
+  displayName: Create/Update Batch Endpoint 
+  jobs:
+    - job: DeployBatchEndpoint
+      timeoutInMinutes: 120 # how long to run the job before automatically cancelling
+      steps:
+      - checkout: self
+        path: s/
+      - template: /mlops/deploy-pipeline/aml-cli-v2/install-az-cli.yml
+      - template: /mlops/deploy-pipeline/aml-cli-v2/install-aml-cli.yml
+      - template: /mlops/deploy-pipeline/aml-cli-v2/connect-to-workspace.yml
+
+      - template: /mlops/deploy-pipeline/aml-cli-v2/create-endpoint.yml
+        parameters: 
+          endpoint_file: mlops/batch/endpoint.yaml
+
+      - template: /mlops/deploy-pipeline/aml-cli-v2/create-deployment.yml
+        parameters:
+          deployment_name: batch-dp
+          deployment_file: mlops/batch/batch-deployment.yaml    
+            
+      
+

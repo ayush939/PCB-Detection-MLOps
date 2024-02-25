@@ -1,0 +1,26 @@
+# <component>
+name: yolov5
+display_name: Evaluate Model
+# version: 1 # Not specifying a version will automatically update the version
+type: command
+inputs:
+  data: 
+    type: uri_folder
+  model:
+    type: custom_model
+outputs:
+  metric:
+    type: uri_folder    
+code: ./yolo
+environment:
+ azureml:yolov5@latest
+command: >-
+  python yolov5/val.py 
+  --img 1280 
+  --iou-thres 0.60
+  --conf-thres 0.25
+  --data customVal.yaml 
+  --weights ${{inputs.model}} 
+  --dataasset_path ${{inputs.data}}
+  --save_metric ${{outputs.metric}}
+# </component>
